@@ -1,0 +1,17 @@
+{
+    "name": "Home Device 2",
+    "description": "string",
+    "deviceId": "A31AAB65-A798-41F1-952D-EFA47AD1CC71",
+    "sensors": [
+        {
+            "value": 1,
+            "type": "pH",
+            "readTime": "2021-08-12T21:20:19.083Z",
+            "name": "pH",
+            "reference": "121212",
+            "isAvailble": true,
+            "isHealthy": true,
+            "groupName": "default"
+        }
+    ]
+}

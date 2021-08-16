@@ -1,5 +1,8 @@
 import base64
 import requests
+import json
+from datetime import datetime
+from sensor import SensorUpdate
 
 class HydriotAdapter():
     driver = None
@@ -19,14 +22,14 @@ class HydriotAdapter():
         self.headers = {
             'authorization': f"Basic {basic_auth}",
             'cache-control': "no-cache",
-            'postman-token': "cd202212-8067-4a22-a1f0-3bedbcc13ef8"
+            'content-type': "application/json"
         }
     
-    def check_if_device_is_registered(self, deviceId):
+    def check_if_device_is_registered(self, device_id):
 
         try:
             print("Making API call...")
-            url = f"{self.base_url}/api/Device/CheckRegisteredStatus/{deviceId}"
+            url = f"{self.base_url}/api/Device/CheckRegisteredStatus/{device_id}"
             response = requests.request("GET", url, headers=self.headers)
 
             if response.status_code != 200:
@@ -37,10 +40,60 @@ class HydriotAdapter():
      
         return response.text == 'true'
 
+    def register_device(self, name, description, createUpdate = False):
+
+        payload = {
+              "deviceName": name,
+              "deviceDescription": description,
+              "createUpdate": createUpdate
+        }
+
+        try:
+            print("Making API call...")
+            url = f"{self.base_url}/api/Device/RegisterDevice"
+            response = requests.request("POST", url, data=json.dumps(payload), headers=self.headers)
+
+            if response.status_code != 200:
+                raise LookupError(f'Failed to complete the request. Error Code [{response.status_code}]')
+
+        except requests.exceptions.RequestException as e:  # This is the correct syntax
+            print(f"Failed to verify registration. Error details >> {e}")
+
+        return response.json()
+
+    def get_device_data(self, device_id):
+        
+        try:
+            print("Making API call...")
+            url = f"{self.base_url}/api/Device/GetDeviceData/{device_id}"
+            response = requests.request("GET", url, headers=self.headers)
+
+            if response.status_code != 200:
+                raise LookupError(f'Failed to complete the request. Error Code [{response.status_code}]')
+
+        except requests.exceptions.RequestException as e:  # This is the correct syntax
+            print(f"Failed to verify registration. Error details >> {e}")
+
+        return response.json()
 
 
+    def update_sensor_data(self, device_id, name, description, sensors = []):
 
+        sensor_update = SensorUpdate(device_id, name, description, sensors)
+        payload = sensor_update.toJSON()
+        
+        try:
+            print("Making API call...")
+            url = f"{self.base_url}/api/Device/UpdateSensorData/{device_id}"
+            response = requests.request("PUT", url, data=json.dumps(payload), headers=self.headers)
 
+            if response.status_code != 200:
+                raise LookupError(f'Failed to complete the request. Error Code [{response.status_code}]')
+
+        except requests.exceptions.RequestException as e:  # This is the correct syntax
+            print(f"Failed to verify registration. Error details >> {e}")
+
+        return response.json()
      
         
 
