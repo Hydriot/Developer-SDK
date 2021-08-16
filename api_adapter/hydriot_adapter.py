@@ -78,8 +78,9 @@ class HydriotAdapter():
 
 
     def update_sensor_data(self, device_id, name, description, sensors = []):
-
         sensor_update = SensorUpdate(device_id, name, description, sensors)
+
+        ##TODO: Figure out how to serialize datetime to JSON
         payload = sensor_update.toJSON()
         
         try:
