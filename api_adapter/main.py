@@ -3,7 +3,7 @@ from hydriot_adapter import HydriotAdapter
 from sensor import Sensor, Settings, SensorType, BaseType
 
 ## =============================================================
-adapter = HydriotAdapter('XXXXX','XXXXX')
+adapter = HydriotAdapter('XXXX','XXXX')
 device_id = 'A31AAB65-A798-41F1-952D-EFA47AD1CC71'
 ## =============================================================
 

@@ -1,5 +1,3 @@
-
-import json
 from enum import IntEnum
 from datetime import datetime
 
@@ -46,21 +44,3 @@ class Sensor():
         self.readTime = read_time
         self.groupName = group_name
         self.settings = settings
-      
-class SensorUpdate():
-
-    def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__, 
-            sort_keys=True, indent=4)
-
-    deviceId = None
-    name = None
-    description = None
-    sensors = None
-
-    def __init__(self, deviceId, name, description, sensors = []):
-        self.deviceId = deviceId
-        self.name = name
-        self.description = description
-        self.sensors = sensors
-

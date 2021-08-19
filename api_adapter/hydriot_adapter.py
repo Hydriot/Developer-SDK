@@ -1,8 +1,6 @@
 import base64
 import requests
 import json
-from datetime import datetime
-from sensor import SensorUpdate
 
 class HydriotAdapter():
     driver = None
@@ -77,11 +75,27 @@ class HydriotAdapter():
         return response.json()
 
 
-    def update_sensor_data(self, device_id, name, description, sensors = []):
-        sensor_update = SensorUpdate(device_id, name, description, sensors)
+    def update_sensor_data(self, device_id, device_name, device_description, sensors = []):
 
-        ##TODO: Figure out how to serialize datetime to JSON
-        payload = sensor_update.toJSON()
+        converted_list = []
+        for sensor in sensors:
+            converted_list.append({
+                "name": sensor.name,
+                "type": sensor.type,
+                "value": sensor.value,
+                "isAvailble": sensor.isAvailble,
+                "isHealthy": sensor.isHealthy,
+                "groupName": "Default",
+                "settings" : None,
+                "readTime": None if sensor.readTime is None else sensor.readTime.isoformat()  
+            })
+
+        payload = {
+            "deviceId": device_id,
+            "name": device_name,
+            "description": device_description,
+            "sensors": converted_list
+        }  
         
         try:
             print("Making API call...")
